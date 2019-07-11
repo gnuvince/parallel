@@ -9,7 +9,11 @@ pub fn remove_extension(input: &str) -> &str {
     }
 
     // Account for hidden files and directories
-    if ext_index == 0 || dir_index + 2 > ext_index { input } else { &input[0..ext_index] }
+    if ext_index == 0 || (dir_index > 0 && dir_index + 2 > ext_index) {
+        input
+    } else {
+        &input[0..ext_index]
+    }
 }
 
 pub fn remove_pattern<'a>(input: &'a str, pattern: &str) -> &'a str {
@@ -43,6 +47,8 @@ mod tests {
     #[test]
     fn path_remove_ext_simple() {
         assert_eq!(remove_extension("foo.txt"), "foo");
+        // Test for #76
+        assert_eq!(remove_extension("a.txt"), "a");
     }
 
     #[test]
